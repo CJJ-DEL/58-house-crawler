@@ -11,8 +11,8 @@ from City58.utils.parse import parse_xiaoqu_detail_page, parse_ershoufang_list_p
                                 parse_chuzufang_detail_page
 
 class A58Spider(scrapy.Spider):
-    # 爬虫启动时间
-    start = time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(time.time()))
+    # 爬虫启动时间(注意: 属性名不能叫 start, 会与新版 Scrapy 的 start() 方法冲突)
+    start_time = time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(time.time()))
     name = '58'
     allowed_domains = ['58.com']
     xiaoqu_url = 'https://{}/xiaoqu/{}'
@@ -175,11 +175,9 @@ class A58Spider(scrapy.Spider):
         """
         # 结束时间
         fnished = time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(time.time()))
-        # 创建邮件发送对象
-        mail = MailSender.from_settings(self.settings)
         # 邮件内容
         spider_name = self.settings.get('BOT_NAME')
-        start_time = self.start
+        start_time = self.start_time
         success_request = self.crawler.stats.get_value("Success_Reqeust")
         failed_request = self.crawler.stats.get_value("Failed_Reqeust")
         # 若请求成功, 则默认为0
@@ -200,7 +198,7 @@ class A58Spider(scrapy.Spider):
             failed_db,
             fnished_time)
         try:
-            # 发送邮件
-            mail.send(to=self.settings.get('RECEIVE_LIST'), subject=self.settings.get('SUBJECT'), body=body)
+            # 发送邮件(新版 Scrapy 已移除 MailSender.from_settings, 且为测试账号, 测试阶段跳过)
+            pass
         except Exception as e:
             self.logger.error("Send Email Existing Error, Reason: {}".format(e.args))

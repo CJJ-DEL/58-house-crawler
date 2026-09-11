@@ -52,14 +52,17 @@ class MysqlTwistedPipeline(object):
 class JsonPipeline(object):
     def open_spider(self, spider):
         self.file = codecs.open('houseinfo.json', 'w', encoding='utf-8')
-        self.file.write(b'[\n')
+        self.file.write('[\n')
+        self._first = True
 
     def process_item(self, item, spider):
         # 序列化数据
-        lines = '{}\n'.format(json.dumps(dict(item), indent=2, ensure_ascii=False))
-        self.file.write(lines)
+        if not self._first:
+            self.file.write(',\n')
+        self._first = False
+        self.file.write(json.dumps(dict(item), indent=2, ensure_ascii=False))
         return item
 
     def close_spider(self, spider):
-        self.file.write(b']')
+        self.file.write('\n]')
         self.file.close()

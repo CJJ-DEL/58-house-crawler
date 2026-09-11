@@ -48,7 +48,7 @@ DOWNLOAD_TIMEOUT = 10
 # See https://doc.scrapy.org/en/latest/topics/downloader-middleware.html
 DOWNLOADER_MIDDLEWARES = {
     'City58.middlewares.RandomUAMiddleware': 490,
-    'City58.middlewares.ProxyMiddleware': 500,
+    # 'City58.middlewares.ProxyMiddleware': 500,  # 原代理(abuyun)已失效,测试时禁用
     'City58.middlewares.DownloadRetryMiddleware': 510
 }
 
@@ -61,8 +61,8 @@ DOWNLOADER_MIDDLEWARES = {
 # Configure item pipelines
 # See https://doc.scrapy.org/en/latest/topics/item-pipeline.html
 ITEM_PIPELINES = {
-    'City58.pipelines.MysqlTwistedPipeline': 300,
-    # 'City58.pipelines.JsonPipeline': 301,
+    # 'City58.pipelines.MysqlTwistedPipeline': 300,  # 需要本地MySQL,测试时禁用
+    'City58.pipelines.JsonPipeline': 301,  # 测试:落盘 houseinfo.json
 }
 
 # Enable and configure the AutoThrottle extension (disabled by default)
